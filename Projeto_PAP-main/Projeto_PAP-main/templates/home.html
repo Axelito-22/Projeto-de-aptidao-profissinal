@@ -1,0 +1,329 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show flash-home-message" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="fifa-home-container">
+    <!-- Hero Section -->
+    <section class="fifa-hero">
+        <div class="hero-overlay"></div>
+        <div class="container position-relative">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-12 text-white animate-slide-up text-center">
+                    <h1 class="display-3 fw-bold mb-4">Madeira Ativa</h1>
+                    <p class="lead mb-4">Bem-vindo ao Madeira Ativa, o seu portal definitivo para o desporto na Madeira! Somos especialistas na organização de torneios de voleibol e futsal, conectando equipas, atletas e fãs em eventos emocionantes por toda a ilha.</p>
+                    <div class="hero-features mb-4 justify-content-center">
+                        <div class="feature-item">
+                            <i class="fas fa-trophy"></i>
+                            <span>Competições Profissionais</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Calendário Atualizado</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Eventos em Toda a Ilha</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 justify-content-center">
+                        {% if 'user_category' in session %}
+                        <div class="btn btn-fifa-primary">
+                            <i class="fas fa-user"></i> {{ session['user_category']|title }}
+                        </div>
+                        {% else %}
+                        <div class="btn btn-fifa-primary">
+                            <i class="fas fa-user"></i> Visitante
+                        </div>
+                        {% endif %}
+                        <a href="{{ url_for('noticias') }}" class="btn btn-fifa-secondary">
+                            <i class="fas fa-newspaper"></i> Últimas Notícias
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sports Navigation -->
+    <div class="container">
+        <div class="sports-nav">
+            <div class="sport-item active">
+                <a href="{{ url_for('home') }}">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </div>
+            <div class="sport-item">
+                <a href="{{ url_for('voleibol') }}">
+                    <i class="fas fa-volleyball-ball"></i>
+                    <span>Voleibol</span>
+                </a>
+            </div>
+            <div class="sport-item">
+                <a href="{{ url_for('futsal') }}">
+                    <i class="fas fa-futbol"></i>
+                    <span>Futsal</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Section -->
+    <section class="calendar-section py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="calendar-card-hero">
+                        <h2 class="calendar-title">Próximos Eventos</h2>
+                        <div class="calendar">
+                            <div class="calendar-header">
+                                <div class="calendar-nav">
+                                    <button id="prevMonth" class="calendar-nav-btn">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <span id="monthDisplay"></span>
+                                    <button id="nextMonth" class="calendar-nav-btn">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <div>Dom</div>
+                                <div>Seg</div>
+                                <div>Ter</div>
+                                <div>Qua</div>
+                                <div>Qui</div>
+                                <div>Sex</div>
+                                <div>Sáb</div>
+                            </div>
+                            <div id="calendarDays" class="calendar-days"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="fifa-news py-5">
+        <div class="container">
+            <h2 class="section-title mb-4">Últimas Notícias</h2>
+            <div class="row g-4">
+                {% if ultima_noticia %}
+                <div class="col-lg-12">
+                    <div class="news-card">
+                        <div class="news-content">
+                            <div class="news-date">{{ ultima_noticia[4] }}</div>
+                            <h3 class="news-title">{{ ultima_noticia[1] }}</h3>
+                            <p class="news-description">{{ ultima_noticia[2] }}</p>
+                            <a href="{{ url_for('noticias') }}" class="btn btn-fifa-link">Ver todas as notícias <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        Não existem notícias disponíveis no momento.
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Games Section -->
+    <section class="upcoming-games py-5">
+        <div class="container">
+            <h2 class="section-title mb-4">Próximos Jogos</h2>
+            <div class="row">
+                {% if proximo_jogo_futsal %}
+                <!-- Futsal Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="match-card">
+                        <div class="match-date">
+                            {% set data = proximo_jogo_futsal[1].split('-') %}
+                            <span class="date">{{ data[2] }}</span>
+                            {% set meses = {
+                                '01': 'JAN', '02': 'FEV', '03': 'MAR',
+                                '04': 'ABR', '05': 'MAI', '06': 'JUN',
+                                '07': 'JUL', '08': 'AGO', '09': 'SET',
+                                '10': 'OUT', '11': 'NOV', '12': 'DEZ'
+                            } %}
+                            <span class="month">{{ meses[data[1]] }}</span>
+                            <span class="year">{{ data[0] }}</span>
+                            <span class="sport-icon"><img src="{{ url_for('static', filename='imagens/bolaFutebol.png') }}" alt="Futsal" style="height: 1.5em; vertical-align: middle;"></span>
+                        </div>
+                        <div class="match-details">
+                            <div class="teams">
+                                <span class="team">{{ proximo_jogo_futsal[2] }}</span>
+                                <span class="vs">VS</span>
+                                <span class="team">{{ proximo_jogo_futsal[3] }}</span>
+                            </div>
+                            <div class="match-info">
+                                <span class="location"><i class="fas fa-map-marker-alt"></i> {{ proximo_jogo_futsal[4] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if proximo_jogo_voleibol %}
+                <!-- Voleibol Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="match-card">
+                        <div class="match-date">
+                            {% set data = proximo_jogo_voleibol[1].split('-') %}
+                            <span class="date">{{ data[2] }}</span>
+                            {% set meses = {
+                                '01': 'JAN', '02': 'FEV', '03': 'MAR',
+                                '04': 'ABR', '05': 'MAI', '06': 'JUN',
+                                '07': 'JUL', '08': 'AGO', '09': 'SET',
+                                '10': 'OUT', '11': 'NOV', '12': 'DEZ'
+                            } %}
+                            <span class="month">{{ meses[data[1]] }}</span>
+                            <span class="year">{{ data[0] }}</span>
+                            <span class="sport-icon"><img src="{{ url_for('static', filename='imagens/bolaVoleibol.png') }}" alt="Voleibol" style="height: 1.5em; vertical-align: middle;"></span>
+                        </div>
+                        <div class="match-details">
+                            <div class="teams">
+                                <span class="team">{{ proximo_jogo_voleibol[2] }}</span>
+                                <span class="vs">VS</span>
+                                <span class="team">{{ proximo_jogo_voleibol[3] }}</span>
+                            </div>
+                            <div class="match-info">
+                                <span class="location"><i class="fas fa-map-marker-alt"></i> {{ proximo_jogo_voleibol[4] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if not proximo_jogo_futsal and not proximo_jogo_voleibol %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        Não existem jogos agendados.
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mx-auto">
+                    <h2 class="section-title mb-4">Sobre o Madeira Ativa</h2>
+                    <p class="lead mb-4">O Madeira Ativa é mais do que uma plataforma de desporto - é um movimento que promove a atividade física e o espírito competitivo na ilha da Madeira. Organizamos torneios de voleibol e futsal, conectando comunidades e criando oportunidades para atletas de todos os níveis.</p>
+                    <div class="about-features">
+                        <div class="feature">
+                            <i class="fas fa-users"></i>
+                            <h4>Comunidade Ativa</h4>
+                            <p>Conectamos atletas, equipas e fãs</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-medal"></i>
+                            <h4>Competições</h4>
+                            <p>Torneios profissionais e amadores</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <h4>Eventos</h4>
+                            <p>Jogos em toda a ilha</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const jogosDoMes = JSON.parse('{{ jogos_do_mes|tojson|safe }}');
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        function createCalendar(month, year) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay();
+            const totalDays = lastDay.getDate();
+
+            const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                              'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+            document.getElementById('monthDisplay').textContent = `${monthNames[month]} ${year}`;
+
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+
+            for (let i = 0; i < startDay; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day');
+                calendarDays.appendChild(dayElement);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day');
+                dayElement.textContent = day;
+
+                const today = new Date();
+                if (today.getDate() === day && 
+                    today.getMonth() === month && 
+                    today.getFullYear() === year) {
+                    dayElement.classList.add('today');
+                }
+
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const hasFutsal = jogosDoMes.some(jogo => jogo[0] === dateStr && jogo[1] === 'Futsal');
+                const hasVoleibol = jogosDoMes.some(jogo => jogo[0] === dateStr && jogo[1] === 'Voleibol');
+
+                if (hasFutsal && hasVoleibol) {
+                    dayElement.classList.add('has-both');
+                } else if (hasFutsal) {
+                    dayElement.classList.add('has-futsal');
+                } else if (hasVoleibol) {
+                    dayElement.classList.add('has-voleibol');
+                }
+
+                calendarDays.appendChild(dayElement);
+            }
+        }
+
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            createCalendar(currentMonth, currentYear);
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            createCalendar(currentMonth, currentYear);
+        });
+
+        createCalendar(currentMonth, currentYear);
+    });
+</script>
+{% endblock %}

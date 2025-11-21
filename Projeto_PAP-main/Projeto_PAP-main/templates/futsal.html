@@ -1,0 +1,270 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="header-section">
+        <h1>Jogos de Futsal <img src="{{ url_for('static', filename='imagens/bolaFutebol.png') }}" alt="Futsal" style="height: 1.2em; vertical-align: middle;"></h1>
+        {% if 'user_id' in session and session['user_category'] == 'admin' %}
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addJogoModal">
+                <i class="fas fa-plus"></i> Adicionar Jogo
+            </button>
+        {% endif %}
+    </div>
+    
+    <!-- Modal para adicionar jogo -->
+    <div class="modal fade" id="addJogoModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Novo Jogo de Futsal <img src="{{ url_for('static', filename='imagens/bolaFutebol.png') }}" alt="Futsal" style="height: 1em; vertical-align: middle;"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ url_for('futsal') }}">
+                        <div class="mb-3">
+                            <label for="Data" class="form-label">Data do Jogo:</label>
+                            <input type="date" class="form-control" name="Data" id="Data" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Equipa1" class="form-label">Equipa 1:</label>
+                            <select class="form-select" name="Equipa1" id="Equipa1" required>
+                                <option value="" selected disabled>Selecione uma equipa</option>
+                                <option value="Calheta">Calheta</option>
+                                <option value="Ponta do sol">Ponta do sol</option>
+                                <option value="Porto Moniz">Porto Moniz</option>
+                                <option value="Maritimo">Maritimo</option>
+                                <option value="Machico">Machico</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Equipa2" class="form-label">Equipa 2:</label>
+                            <select class="form-select" name="Equipa2" id="Equipa2" required>
+                                <option value="" selected disabled>Selecione uma equipa</option>
+                                <option value="Calheta">Calheta</option>
+                                <option value="Ponta do sol">Ponta do sol</option>
+                                <option value="Porto Moniz">Porto Moniz</option>
+                                <option value="Maritimo">Maritimo</option>
+                                <option value="Machico">Machico</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Pavilhao" class="form-label">Pavilhão:</label>
+                            <select class="form-select" name="Pavilhao" id="Pavilhao" required>
+                                <option value="" selected disabled>Selecione um pavilhão</option>
+                                <option value="Calheta">Calheta</option>
+                                <option value="Estreito da Calheta">Estreito da Calheta</option>
+                                <option value="Prazeres">Prazeres</option>
+                                <option value="Machico">Machico</option>
+                                <option value="Ribeira Brava">Ribeira Brava</option>
+                                <option value="Ponta do Sol">Ponta do Sol</option>
+                            </select>
+                        </div>
+
+                        <input type="hidden" name="Tipo" value="Futsal">
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Adicionar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar jogo -->
+    <div class="modal fade" id="editJogoModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Jogo de Futsal <img src="{{ url_for('static', filename='imagens/bolaFutebol.png') }}" alt="Futsal" style="height: 1em; vertical-align: middle;"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="editJogoForm">
+                        <input type="hidden" name="_method" value="PUT">
+                        <div class="mb-3">
+                            <label for="editData" class="form-label">Data do Jogo:</label>
+                            <input type="date" class="form-control" name="Data" id="editData" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEquipa1" class="form-label">Equipa 1:</label>
+                            <select class="form-select" name="Equipa1" id="editEquipa1" required>
+                                <option value="" disabled>Selecione uma equipa</option>
+                                <option value="Calheta">Calheta</option>
+                                <option value="Ponta do sol">Ponta do sol</option>
+                                <option value="Porto Moniz">Porto Moniz</option>
+                                <option value="Maritimo">Maritimo</option>
+                                <option value="Machico">Machico</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEquipa2" class="form-label">Equipa 2:</label>
+                            <select class="form-select" name="Equipa2" id="editEquipa2" required>
+                                <option value="" disabled>Selecione uma equipa</option>
+                                <option value="Calheta">Calheta</option>
+                                <option value="Ponta do sol">Ponta do sol</option>
+                                <option value="Porto Moniz">Porto Moniz</option>
+                                <option value="Maritimo">Maritimo</option>
+                                <option value="Machico">Machico</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editPavilhao" class="form-label">Pavilhão:</label>
+                            <select class="form-select" name="Pavilhao" id="editPavilhao" required>
+                                <option value="" disabled>Selecione um pavilhão</option>
+                                <option value="Calheta">Calheta</option>
+                                <option value="Estreito da Calheta">Estreito da Calheta</option>
+                                <option value="Prazeres">Prazeres</option>
+                                <option value="Machico">Machico</option>
+                                <option value="Ribeira Brava">Ribeira Brava</option>
+                                <option value="Ponta do Sol">Ponta do Sol</option>
+                            </select>
+                        </div>
+
+                        <input type="hidden" name="Tipo" value="Futsal">
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        .jogo {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+        .jogo-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.875rem;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #000;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+
+    {% if jogos %}
+        {% for jogo in jogos %}
+        <div class="jogo">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="team">{{ jogo[2] }}</div>
+                <div class="vs">VS</div>
+                <div class="team">{{ jogo[3] }}</div>
+            </div>
+            <div class="match-info text-center mt-2">
+                <div>Data: {{ jogo[1] }}</div>
+                {% if jogo[4] %}
+                <div class="location">{{ jogo[4] }}</div>
+                {% endif %}
+            </div>
+            
+            {% if 'user_id' in session and session['user_category'] == 'admin' %}
+            <div class="jogo-actions">
+                <button class="btn btn-warning btn-sm" onclick="editarJogo('{{ jogo[0] }}', '{{ jogo[1] }}', '{{ jogo[2] }}', '{{ jogo[3] }}', '{{ jogo[4] }}')" data-bs-toggle="modal" data-bs-target="#editJogoModal">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <form method="POST" action="{{ url_for('excluir_jogo', id=jogo[0]) }}" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja excluir este jogo?');">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Não existem jogos de futsal agendados.</p>
+    {% endif %}
+</div>
+
+<script>
+function editarJogo(id, data, equipa1, equipa2, pavilhao) {
+    document.getElementById('editJogoForm').action = '/futsal/' + id;
+    document.getElementById('editData').value = data;
+    
+    // Selecionar as equipes corretas nos selects
+    document.getElementById('editEquipa1').value = equipa1;
+    document.getElementById('editEquipa2').value = equipa2;
+    
+    document.getElementById('editPavilhao').value = pavilhao;
+}
+
+// Adicionar validação para não permitir a mesma equipe nos dois selects
+document.addEventListener('DOMContentLoaded', function() {
+    const equipa1Select = document.getElementById('Equipa1');
+    const equipa2Select = document.getElementById('Equipa2');
+    const editEquipa1Select = document.getElementById('editEquipa1');
+    const editEquipa2Select = document.getElementById('editEquipa2');
+
+    function validateTeamSelection(select1, select2) {
+        select1.addEventListener('change', function() {
+            Array.from(select2.options).forEach(option => {
+                option.disabled = option.value === select1.value && option.value !== '';
+            });
+        });
+
+        select2.addEventListener('change', function() {
+            Array.from(select1.options).forEach(option => {
+                option.disabled = option.value === select2.value && option.value !== '';
+            });
+        });
+    }
+
+    // Aplicar validação aos selects do formulário de adicionar
+    validateTeamSelection(equipa1Select, equipa2Select);
+    // Aplicar validação aos selects do formulário de editar
+    validateTeamSelection(editEquipa1Select, editEquipa2Select);
+});
+</script>
+{% endblock %}

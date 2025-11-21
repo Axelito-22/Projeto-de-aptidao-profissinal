@@ -1,0 +1,290 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show flash-noticias-message" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        // Esconde a mensagem flash após 4 segundos
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var alert = document.querySelector('.flash-noticias-message');
+                if(alert) {
+                    alert.classList.remove('show');
+                    alert.classList.add('fade');
+                    setTimeout(function() { alert.remove(); }, 500);
+                }
+            }, 4000);
+        });
+    </script>
+
+    <div class="header-section">
+        <h1>Notícias</h1>
+        {% if 'user_id' in session and session['user_category'] in ['admin', 'noticias'] %}
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNoticiaModal">
+                <i class="fas fa-plus"></i> Adicionar Notícia
+            </button>
+        {% endif %}
+    </div>
+    
+    <!-- Modal para adicionar notícia -->
+    <div class="modal fade" id="addNoticiaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Nova Notícia</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ url_for('noticias') }}">
+                        <div class="mb-3">
+                            <label for="Titulo" class="form-label">Título:</label>
+                            <input type="text" class="form-control" name="Titulo" id="Titulo" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Descricao" class="form-label">Descrição:</label>
+                            <textarea class="form-control" name="Descricao" id="Descricao" rows="4"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Datacria" class="form-label">Data de Criação:</label>
+                            <input type="date" class="form-control" name="Datacria" id="Datacria" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="DataPublic" class="form-label">Data de Publicação:</label>
+                            <input type="date" class="form-control" name="DataPublic" id="DataPublic" required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Adicionar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar notícia -->
+    <div class="modal fade" id="editNoticiaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Notícia</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="editNoticiaForm">
+                        <input type="hidden" name="_method" value="PUT">
+                        <div class="mb-3">
+                            <label for="editTitulo" class="form-label">Título:</label>
+                            <input type="text" class="form-control" name="Titulo" id="editTitulo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDescricao" class="form-label">Descrição:</label>
+                            <textarea class="form-control" name="Descricao" id="editDescricao" rows="4"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDatacria" class="form-label">Data de Criação:</label>
+                            <input type="date" class="form-control" name="Datacria" id="editDatacria" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDataPublic" class="form-label">Data de Publicação:</label>
+                            <input type="date" class="form-control" name="DataPublic" id="editDataPublic" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        .noticia {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .noticia h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .noticia small {
+            color: #666;
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+        .noticia-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.875rem;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #000;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+    
+    {% if noticias %}
+        {% for noticia in noticias %}
+        <div class="noticia">
+            <h2>{{ noticia[1] }}</h2>
+            <p>{{ noticia[2] }}</p>
+            <small>Data de Publicação: {{ noticia[4] }}</small>
+            
+            {# Sistema de votação #}
+            <div class="votacao mt-2">
+                <form method="POST" action="{{ url_for('votar_noticia', id=noticia[0]) }}" style="display: inline;">
+                    <input type="hidden" name="voto" value="1">
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-thumbs-up"></i> <span id="likes-{{ noticia[0] }}">0</span>
+                    </button>
+                </form>
+                <form method="POST" action="{{ url_for('votar_noticia', id=noticia[0]) }}" style="display: inline;">
+                    <input type="hidden" name="voto" value="-1">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-thumbs-down"></i> <span id="dislikes-{{ noticia[0] }}">0</span>
+                    </button>
+                </form>
+            </div>
+            
+            {# Comentários #}
+            <div class="comentarios mt-3">
+                <button class="btn btn-link" id="toggle-{{ noticia[0] }}" onclick="toggleComentarios('comentarios-{{ noticia[0] }}', 'toggle-{{ noticia[0] }}')">Ver comentários</button>
+                <div id="comentarios-{{ noticia[0] }}" style="display:none;">
+                    <h5>Comentários</h5>
+                    {% if comentarios_dict[noticia[0]] %}
+                        <ul class="list-group mb-2">
+                            {% for id_comentario, comentario, data, nome in comentarios_dict[noticia[0]] %}
+                            <li class="list-group-item">
+                                <strong>{{ nome }}</strong> <span class="text-muted" style="font-size:0.9em">({{ data }})</span><br>
+                                <span id="comentario-text-{{ id_comentario }}">{{ comentario }}</span>
+                                {% if 'user_id' in session and (session['user_category'] in ['admin', 'noticias'] or session['user_name'] == nome) %}
+                                    <form method="POST" action="{{ url_for('excluir_comentario', id_comentario=id_comentario) }}" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja excluir este comentário?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Excluir
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Nenhum comentário ainda.</p>
+                    {% endif %}
+                    {% if 'user_id' in session %}
+                    <form method="POST" action="{{ url_for('comentar_noticia', id=noticia[0]) }}" class="mt-2">
+                        <div class="input-group">
+                            <textarea name="comentario" class="form-control" placeholder="Escreva um comentário..." required></textarea>
+                            <button type="submit" class="btn btn-primary">Comentar</button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <p class="text-muted">Faça login para comentar.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if 'user_id' in session and session['user_category'] in ['admin', 'noticias'] %}
+            <div class="noticia-actions">
+                <button class="btn btn-warning btn-sm" onclick="editarNoticia('{{ noticia[0] }}', '{{ noticia[1] }}', '{{ noticia[2] }}', '{{ noticia[3] }}', '{{ noticia[4] }}')" data-bs-toggle="modal" data-bs-target="#editNoticiaModal">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <form method="POST" action="{{ url_for('excluir_noticia', id=noticia[0]) }}" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta notícia?');">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Não existem notícias disponíveis.</p>
+    {% endif %}
+</div>
+
+<script>
+function editarNoticia(id, titulo, descricao, dataCriacao, dataPublicacao) {
+    document.getElementById('editTitulo').value = titulo;
+    document.getElementById('editDescricao').value = descricao;
+    document.getElementById('editDatacria').value = dataCriacao;
+    document.getElementById('editDataPublic').value = dataPublicacao;
+    document.getElementById('editNoticiaForm').action = '/noticias/' + id;
+}
+
+function toggleComentarios(id, buttonId) {
+    var comentarios = document.getElementById(id);
+    var button = document.getElementById(buttonId);
+    if (comentarios.style.display === 'none') {
+        comentarios.style.display = 'block';
+        button.textContent = 'Ocultar comentários';
+    } else {
+        comentarios.style.display = 'none';
+        button.textContent = 'Ver comentários';
+    }
+}
+
+function atualizarVotos(id) {
+    fetch('/noticias/' + id + '/votos')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('likes-' + id).textContent = data.likes;
+            document.getElementById('dislikes-' + id).textContent = data.dislikes;
+        })
+        .catch(error => console.error('Erro ao atualizar votos:', error));
+}
+
+// Atualizar votos ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+    {% for noticia in noticias %}
+    atualizarVotos('{{ noticia[0] }}');
+    {% endfor %}
+});
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="auth-form">
+    <div class=" animate-slide-up">
+        <h2 class="text-center mb-4">
+            <i class="fas fa-user-plus text-primary"></i> Registar
+        </h2>
+        
+        <form method="POST" class="animate-fade-in">
+            <div class="mb-3">
+                <label for="name" class="form-label">
+                    <i class="fas fa-user"></i> Nome Completo
+                </label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="username" class="form-label">
+                    <i class="fas fa-user-circle"></i> Username
+                </label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">
+                    <i class="fas fa-envelope"></i> Email
+                </label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">
+                    <i class="fas fa-lock"></i> Senha
+                </label>
+                <input type="password" class="form-control" id="password" name="password" 
+                       required onkeyup="checkPasswordStrength(this.value)">
+                <div class="password-strength"></div>
+                <small class="text-muted">A senha deve ter pelo menos 8 caracteres</small>
+            </div>
+
+            <div class="mb-4">
+                <label for="confirm_password" class="form-label">
+                    <i class="fas fa-lock"></i> Confirmar senha
+                </label>
+                <input type="password" class="form-control" id="confirm_password" 
+                       name="confirm_password" required>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-auth">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

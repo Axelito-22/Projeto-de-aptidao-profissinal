@@ -1,0 +1,712 @@
+/* =========================
+   VARIÁVEIS GLOBAIS
+   ========================= */
+:root {
+    --primary-color: #4a5568;
+    --secondary-color: #718096;
+    --highlight-color: #a0aec0;
+    --text-color: #2d3748;
+    --background-color: #f7fafc;
+    --success-color: #48bb78;
+    --danger-color: #f56565;
+    --fifa-primary: #4a5568;
+    --fifa-secondary: #718096;
+    --fifa-dark: #2d3748;
+    --fifa-light: #ffffff;
+    --gradient-primary: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+    --gradient-secondary: linear-gradient(135deg, #718096 0%, #a0aec0 100%);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* =========================
+   RESET E BODY
+   ========================= */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* =========================
+   NAVBAR
+   ========================= */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    color: var(--fifa-primary) !important;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.navbar-brand:hover {
+    transform: translateY(-2px);
+}
+
+.auth-buttons .btn {
+    margin-left: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.auth-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* =========================
+   HERO (CABEÇALHO PRINCIPAL)
+   ========================= */
+.fifa-hero {
+    background: linear-gradient(135deg, rgba(74,85,104,0.5) 0%, rgba(113,128,150,0.5) 100%), url('../imagens/ilhaMadeira.png') center center/auto 80vh no-repeat;
+    min-height: 40vh;
+    position: relative;
+    overflow: hidden;
+    padding: 1.5rem 0;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(74, 85, 104, 0.25); /* overlay mais transparente */
+    z-index: 1;
+}
+
+.fifa-hero .container.position-relative {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-features {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--fifa-light);
+    font-weight: 500;
+}
+
+.feature-item i {
+    font-size: 1.5rem;
+    color: var(--highlight-color);
+}
+
+/* =========================
+   NAVEGAÇÃO DESPORTOS
+   ========================= */
+.sports-nav {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: var(--fifa-light);
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+}
+
+.sport-item {
+    text-align: center;
+    transition: var(--transition);
+}
+
+.sport-item a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.sport-item i {
+    font-size: 1.5rem;
+    color: var(--fifa-primary);
+}
+
+.sport-item.active a,
+.sport-item a:hover {
+    background: var(--gradient-primary);
+    color: var(--fifa-light);
+    transform: translateY(-2px);
+}
+
+.sport-item.active i,
+.sport-item a:hover i {
+    color: var(--highlight-color);
+}
+
+/* =========================
+   CALENDÁRIO
+   ========================= */
+.calendar-section {
+    background-color: var(--background-color);
+    padding: 2rem 0;
+}
+
+.calendar-card-hero {
+    background: var(--fifa-light);
+    border-radius: 16px;
+    padding: 1.2rem;
+    box-shadow: var(--shadow-md);
+    height: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.calendar-title {
+    color: var(--fifa-primary);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.calendar {
+    background: var(--fifa-light);
+    border-radius: 12px;
+}
+
+.calendar-header {
+    padding: 1rem;
+    background: var(--gradient-primary);
+    border-radius: 12px 12px 0 0;
+    color: var(--fifa-light);
+}
+
+.calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.calendar-nav-btn {
+    background: none;
+    border: none;
+    color: var(--fifa-light);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition);
+    opacity: 0.8;
+}
+
+.calendar-nav-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--fifa-light);
+    font-weight: 600;
+    color: var(--fifa-primary);
+    text-align: center;
+    font-size: 1rem;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.calendar-day {
+    min-width: 36px;
+    min-height: 48px;
+    max-width: 36px;
+    max-height: 48px;
+    font-size: 1rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.calendar-day:hover {
+    background: var(--gradient-primary);
+    color: var(--fifa-light);
+}
+
+.calendar-day.today {
+    background: var(--highlight-color);
+    color: var(--fifa-dark);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* Indicador de Futsal no calendário com imagem */
+.calendar-day.has-futsal::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: url('../imagens/bolaFutebol.png') center center/contain no-repeat;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Indicador de Voleibol no calendário com imagem */
+.calendar-day.has-voleibol::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: url('../imagens/bolaVoleibol.png') center center/contain no-repeat;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Indicador para ambos: mostrar as duas bolas lado a lado */
+.calendar-day.has-both::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 20px;
+    border-radius: 0;
+    background: url('../imagens/bolaFutebol.png') left center/contain no-repeat, url('../imagens/bolaVoleibol.png') right center/contain no-repeat;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   NOTÍCIAS
+   ========================= */
+.fifa-news {
+    background: var(--fifa-light);
+    padding: 4rem 0;
+}
+
+.section-title {
+    color: var(--fifa-primary);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+}
+
+.news-card {
+    background: var(--fifa-light);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.news-date {
+    color: var(--fifa-primary);
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.news-title {
+    color: var(--text-color);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.news-description {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.btn-fifa-link {
+    color: var(--fifa-primary);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.btn-fifa-link:hover {
+    color: var(--fifa-secondary);
+}
+
+/* =========================
+   CARTÕES DE JOGOS
+   ========================= */
+.match-card {
+    background: var(--fifa-light);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    display: flex;
+    gap: 2rem;
+}
+
+.match-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.match-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    background: var(--gradient-primary);
+    color: var(--fifa-light);
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.match-date .date {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.match-date .month,
+.match-date .year {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.sport-icon {
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.match-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.teams {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.team {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.vs {
+    color: var(--fifa-primary);
+    font-weight: 700;
+}
+
+.match-info {
+    color: #666;
+}
+
+.location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.location i {
+    color: var(--fifa-primary);
+}
+
+/* =========================
+   SOBRE (ABOUT)
+   ========================= */
+.about-section {
+    background: var(--fifa-light);
+    padding: 4rem 0;
+}
+
+.about-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.feature {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: var(--background-color);
+    transition: var(--transition);
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.feature i {
+    font-size: 2rem;
+    color: var(--fifa-primary);
+    margin-bottom: 1rem;
+}
+
+.feature h4 {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.feature p {
+    color: #666;
+    margin: 0;
+}
+
+.about-image img {
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+}
+
+/* =========================
+   RESPONSIVO
+   ========================= */
+@media (max-width: 768px) {
+    .hero-features {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .sports-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .match-card {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .match-date {
+        width: 100%;
+    }
+
+    .about-features {
+        grid-template-columns: 1fr;
+    }
+
+    .calendar-weekdays,
+    .calendar-days {
+        gap: 0.25rem;
+    }
+}
+
+@media (max-width: 991px) {
+    .fifa-hero {
+        background-size: auto 50vh;
+        min-height: 25vh;
+        padding: 1rem 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .fifa-hero {
+        background-size: auto 30vh;
+        min-height: 18vh;
+        padding: 0.5rem 0;
+    }
+}
+
+/* =========================
+   ANIMAÇÕES
+   ========================= */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slideUp 0.5s ease;
+}
+
+/* =========================
+   FLASH MENSAGENS
+   ========================= */
+.flash-home-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* =========================
+   UTILITÁRIOS HERO (LEGENDA)
+   ========================= */
+.fifa-hero,
+.fifa-hero h1,
+.fifa-hero .lead,
+.fifa-hero .hero-features,
+.fifa-hero .feature-item,
+.fifa-hero .btn,
+.fifa-hero .btn-fifa-primary,
+.fifa-hero .btn-fifa-secondary {
+    color: #fff !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.fifa-hero .feature-item i {
+    color: #fff !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.fifa-hero .btn {
+    background: rgba(0,0,0,0.2);
+    border: none;
+}
+
+/* =========================
+   FUTSAL (ESPECÍFICO)
+   ========================= */
+
+/* Container de calendário de futsal */
+.calendar-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+/* Cartão de calendário de futsal */
+.calendar {
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de secção futsal */
+h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Lista de jogos de voleibol/futsal */
+.voleibol {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.match {
+    display: grid;
+    grid-template-columns: 80px 1fr auto 1fr;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.time {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.team {
+    text-align: center;
+    padding: 0 10px;
+    color: var(--text-color);
+}
+
+.vs {
+    color: var(--secondary-color);
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.navigation {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    .calendar-container {
+        grid-template-columns: 1fr;
+    }
+}
